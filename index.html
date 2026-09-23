@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Descubre tu Carrera</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+<!-- =========================
+     PANTALLA DATOS DEL ESTUDIANTE
+========================= -->
+
+<section id="pantallaDatos" class="pantalla-datos oculto">
+
+    <div class="contenedor-datos">
+
+        <span class="paso">PASO 1</span>
+
+        <h2>👋 Antes de comenzar...</h2>
+
+        <p class="texto-datos">
+            Queremos conocerte un poquito para mostrarte
+            carreras que puedas estudiar en nuestro centro.
+        </p>
+
+        <div class="pregunta-nivel">
+
+            <h3>¿Cuál es tu nivel académico?</h3>
+
+            <button class="opcion-nivel" data-nivel="noveno">
+                <span class="icono-opcion">📚</span>
+
+                <div>
+                    <strong>Noveno grado aprobado</strong>
+                    <small>
+                        Quiero conocer carreras técnicas disponibles
+                    </small>
+                </div>
+
+                <span class="flecha">→</span>
+            </button>
+
+
+            <button class="opcion-nivel" data-nivel="bachiller">
+                <span class="icono-opcion">🎓</span>
+
+                <div>
+                    <strong>Soy Bachiller</strong>
+                    <small>
+                        Quiero conocer todas mis opciones
+                    </small>
+                </div>
+
+                <span class="flecha">→</span>
+            </button>
+
+        </div>
+
+        <button id="btnRegresar" class="btn-regresar">
+            ← Regresar
+        </button>
+
+    </div>
+
+</section>
+<!-- ==========================================
+     MAPA DE MISIONES
+========================================== -->
+
+<section id="pantallaMapa" class="pantalla-mapa oculto">
+
+    <div class="mapa-contenido">
+
+        <div class="mapa-cabecera">
+
+            <span class="mapa-etiqueta">
+                🚀 TU RECORRIDO
+            </span>
+
+            <h2>
+                Prepárate para descubrir tu camino
+            </h2>
+
+            <p>
+                Completa las misiones. Cada decisión nos ayudará
+                a conocer mejor tus intereses y habilidades.
+            </p>
+
+        </div>
+
+
+        <div class="camino-misiones">
+
+            <!-- MISIÓN 1 -->
+
+            <div class="mision-mapa activa">
+
+                <div class="mision-numero">
+                    1
+                </div>
+
+                <div class="mision-info">
+
+                    <span>
+                        ZONA 01
+                    </span>
+
+                    <strong>
+                        🧠 Descubre cómo piensas
+                    </strong>
+
+                    <small>
+                        Intereses • lógica • decisiones
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="linea-mision"></div>
+
+
+            <!-- MISIÓN 2 -->
+
+            <div class="mision-mapa">
+
+                <div class="mision-numero">
+                    2
+                </div>
+
+                <div class="mision-info">
+
+                    <span>
+                        ZONA 02
+                    </span>
+
+                    <strong>
+                        💻 Tecnología
+                    </strong>
+
+                    <small>
+                        Computación • programación • electrónica
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="linea-mision"></div>
+
+
+            <!-- MISIÓN 3 -->
+
+            <div class="mision-mapa">
+
+                <div class="mision-numero">
+                    3
+                </div>
+
+                <div class="mision-info">
+
+                    <span>
+                        ZONA 03
+                    </span>
+
+                    <strong>
+                        🔧 Manos a la obra
+                    </strong>
+
+                    <small>
+                        Mecánica • electricidad • soldadura
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="linea-mision"></div>
+
+
+            <!-- MISIÓN 4 -->
+
+            <div class="mision-mapa">
+
+                <div class="mision-numero">
+                    4
+                </div>
+
+                <div class="mision-info">
+
+                    <span>
+                        ZONA 04
+                    </span>
+
+                    <strong>
+                        💼 Negocios y personas
+                    </strong>
+
+                    <small>
+                        Administración • finanzas • comunicación
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="linea-mision"></div>
+
+
+            <!-- MISIÓN 5 -->
+
+            <div class="mision-mapa final">
+
+                <div class="mision-numero">
+                    🏆
+                </div>
+
+                <div class="mision-info">
+
+                    <span>
+                        META
+                    </span>
+
+                    <strong>
+                        Tu Top 3
+                    </strong>
+
+                    <small>
+                        Descubre las carreras con mayor afinidad
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="mapa-nivel">
+
+            <span>
+                🎓 Nivel seleccionado:
+            </span>
+
+            <strong id="nivelMapa">
+                Noveno aprobado
+            </strong>
+
+        </div>
+
+
+        <button id="btnIniciarMisiones"
+                class="btn-iniciar-misiones">
+
+            COMENZAR RECORRIDO
+
+            <span>
+                🚀
+            </span>
+
+        </button>
+
+
+        <button id="btnCambiarNivel"
+                class="btn-cambiar-nivel">
+
+            ← Cambiar nivel académico
+
+        </button>
+
+    </div>
+
+</section>
+<!-- ==========================================
+     PANTALLA DEL JUEGO
+========================================== -->
+
+<section id="pantallaQuiz" class="pantalla-quiz oculto">
+
+    <div class="decoracion-juego esfera-juego-1"></div>
+    <div class="decoracion-juego esfera-juego-2"></div>
+
+    <div class="contenedor-quiz">
+
+        <!-- HUD / INFORMACIÓN DEL JUGADOR -->
+        <div class="game-hud">
+
+            <div class="hud-marca">
+                <span class="punto-online"></span>
+                MODO ORIENTACIÓN
+            </div>
+
+            <div class="hud-stats">
+
+                <div class="hud-item">
+                    ⚡
+                    <span>XP</span>
+                    <strong id="xpValor">0</strong>
+                </div>
+
+                <div class="hud-item">
+                    🔥
+                    <span>Racha</span>
+                    <strong id="rachaValor">0</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMACIÓN DE LA MISIÓN -->
+        <div class="cabecera-mision">
+
+            <div>
+                <span id="tipoPregunta"
+                      class="tipo-pregunta">
+                    MISIÓN
+                </span>
+
+                <p id="numeroPregunta">
+                    Misión 1
+                </p>
+            </div>
+
+
+            <div class="lado-derecho-mision">
+
+                <div id="timerBox"
+                     class="timer-box oculto">
+
+                    ⏱️
+
+                    <span id="timerValor">
+                        20
+                    </span>s
+
+                </div>
+
+                <div class="nivel-seleccionado">
+                    🎓
+                    <span id="textoNivel"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BARRA -->
+        <div class="barra-juego">
+
+            <div id="barraProgreso"
+                 class="barra-progreso">
+            </div>
+
+        </div>
+
+
+        <!-- TARJETA PRINCIPAL -->
+        <div class="tarjeta-mision">
+
+            <div class="numero-mision-fondo"
+                 id="numeroFondo">
+                01
+            </div>
+
+
+            <div class="circulo-icono">
+
+                <div id="iconoPregunta"
+                     class="icono-pregunta">
+                    🚀
+                </div>
+
+            </div>
+
+
+            <p class="mini-titulo">
+                ELIGE • DESCUBRE • AVANZA
+            </p>
+
+
+            <h2 id="preguntaTexto">
+                Pregunta
+            </h2>
+
+
+            <p id="preguntaDescripcion"
+               class="pregunta-descripcion">
+                Selecciona una opción
+            </p>
+
+
+            <!-- OPCIONES -->
+            <div id="opcionesQuiz"
+                 class="opciones-quiz">
+            </div>
+
+
+            <!-- FEEDBACK -->
+            <div id="feedbackQuiz"
+                 class="feedback-quiz oculto">
+            </div>
+
+
+            <!-- BOTÓN SIGUIENTE -->
+            <button id="btnSiguiente"
+                    class="btn-siguiente oculto">
+
+                Siguiente misión
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+
+            <div id="xpFlotante"
+                 class="xp-flotante">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     RESULTADOS
+========================================== -->
+
+<section id="pantallaResultado"
+         class="pantalla-resultado oculto">
+
+    <div id="celebracion"
+         class="celebracion">
+    </div>
+
+    <div class="contenedor-resultado">
+
+        <div class="resultado-icono">
+            🏆
+        </div>
+
+        <p class="resultado-etiqueta">
+            MISIÓN COMPLETADA
+        </p>
+
+        <h2>
+            Tu perfil tiene afinidad con...
+        </h2>
+
+        <p class="resultado-descripcion">
+            Analizamos tus intereses, decisiones y
+            desempeño en los pequeños retos.
+            Estas son tus tres opciones con mayor afinidad.
+        </p>
+
+
+        <div class="resumen-jugador">
+
+            <div>
+                ⚡
+                <strong id="xpFinal">
+                    0
+                </strong>
+                <span>XP obtenidos</span>
+            </div>
+
+            <div>
+                🎯
+                <strong id="misionesFinal">
+                    0
+                </strong>
+                <span>Misiones</span>
+            </div>
+
+        </div>
+
+
+        <div id="topCarreras"
+             class="top-carreras">
+        </div>
+
+
+        <p class="nota-resultado">
+            Este resultado es una orientación basada
+            en tus respuestas y no reemplaza un proceso
+            profesional de orientación vocacional.
+        </p>
+
+
+        <button id="btnReiniciar"
+                class="btn-comenzar">
+
+            🔄 Jugar nuevamente
+
+        </button>
+
+    </div>
+
+</section>
+
+    <main class="app">
+
+        <section class="pantalla-inicio">
+
+            <div class="decoracion circulo circulo-1"></div>
+            <div class="decoracion circulo circulo-2"></div>
+
+            <div class="contenedor-inicio">
+
+                <!-- AQUÍ PUEDES COLOCAR EL LOGO -->
+                <div class="logo-contenedor">
+
+                    <img
+                        src="img/logo.png"
+                        alt="Logo del centro"
+                        class="logo"
+                        onerror="this.style.display='none';
+                                 document.getElementById('logoTexto').style.display='flex';"
+                    >
+
+                    <div id="logoTexto" class="logo-placeholder">
+                        🎓
+                    </div>
+
+                </div>
+
+                <p class="nombre-centro">
+                    Centro Tecnológico
+                </p>
+
+                <h1>
+                    William Schwartz Cunningham
+                </h1>
+
+                <div class="linea"></div>
+
+                <h2>
+                    🚀 Descubre la carrera que va contigo
+                </h2>
+
+                <p class="descripcion">
+                    Responde preguntas, supera pequeños retos
+                    y descubre las tres carreras que más se
+                    relacionan con tus intereses y habilidades.
+                </p>
+
+
+                <div class="caracteristicas">
+
+                    <div class="caracteristica">
+                        <span>🎯</span>
+                        <p>Descubre tus intereses</p>
+                    </div>
+
+                    <div class="caracteristica">
+                        <span>🧠</span>
+                        <p>Resuelve retos rápidos</p>
+                    </div>
+
+                    <div class="caracteristica">
+                        <span>🏆</span>
+                        <p>Conoce tu Top 3</p>
+                    </div>
+
+                </div>
+
+
+                <button id="btnComenzar" class="btn-comenzar">
+                    Comenzar aventura
+                    <span>→</span>
+                </button>
+
+
+                <p class="aviso">
+                    No hay respuestas correctas o incorrectas.
+                    Queremos conocer lo que más disfrutas.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+    <footer class="footer-app">
+
+    <div>
+        © <span id="anioFooter"></span>
+        Centro Tecnológico William Schwartz Cunningham
+    </div>
+
+    <div>
+        Orientación Vocacional •JP
+    </div>
+
+</footer>
+
+    <script src="js\app.js"></script>
+
+</body>
+</html>
