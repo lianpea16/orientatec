@@ -4733,3 +4733,365 @@ and
     }
 
 }
+/* =====================================================
+   NAVEGACIÓN ENTRE PREGUNTAS
+===================================================== */
+
+.navegacion-mision {
+
+    @media (max-width: 650px) {
+
+    .pantalla-quiz {
+        padding-bottom: 105px;
+    }
+
+
+    .navegacion-mision {
+
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 1000;
+
+        width: 100%;
+
+        margin: 0;
+
+        padding:
+            10px 12px
+            calc(10px + env(safe-area-inset-bottom));
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        background:
+            rgba(3, 18, 35, 0.94);
+
+        backdrop-filter: blur(16px);
+
+        border-top:
+            1px solid rgba(255,255,255,.12);
+
+        box-shadow:
+            0 -8px 30px
+            rgba(0,0,0,.30);
+    }
+
+
+    .btn-anterior,
+    .btn-siguiente {
+
+        flex: 1;
+
+        width: auto;
+
+        min-width: 0;
+
+        min-height: 50px;
+
+        margin: 0;
+
+        padding: 10px 12px;
+
+        font-size: 12px;
+
+    }
+
+}
+}
+
+
+/* BOTÓN ANTERIOR */
+
+.btn-anterior {
+
+    min-width: 145px;
+
+    min-height: 48px;
+
+    padding: 12px 20px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border-radius: 50px;
+
+    border:
+        1px solid rgba(255,255,255,.20);
+
+    background:
+        rgba(255,255,255,.08);
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+
+.btn-anterior:hover {
+
+    transform:
+        translateY(-3px);
+
+    background:
+        rgba(255,255,255,.15);
+
+    border-color:
+        rgba(100,230,255,.55);
+
+}
+
+
+/* La respuesta que había elegido antes */
+
+.opcion-quiz.respuesta-anterior {
+
+    border-color: #ffe45c;
+
+    background:
+        rgba(255,228,92,.10);
+
+    box-shadow:
+        0 0 0 1px
+        rgba(255,228,92,.15);
+
+}
+
+
+/* CELULAR */
+
+@media(max-width:650px) {
+
+    .navegacion-mision {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 8px;
+
+        width: 100%;
+
+    }
+
+
+    .btn-anterior,
+    .btn-siguiente {
+
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 48px;
+
+        margin: 0;
+
+        padding: 10px;
+
+        font-size: 11px;
+
+    }
+
+}
+
+
+/* Celulares muy pequeños */
+
+@media(max-width:380px) {
+
+    .navegacion-mision {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+/* =====================================================
+   NAVEGACIÓN FIJA EN CELULAR
+===================================================== */
+
+@media (max-width: 650px) {
+
+    /* Dejamos espacio abajo para que
+       la barra fija no tape contenido */
+
+    .pantalla-quiz {
+
+        padding-bottom: 105px;
+
+    }
+
+
+    /* Barra inferior */
+
+    .navegacion-mision {
+
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 1000;
+
+        width: 100%;
+
+        margin: 0;
+
+        padding:
+            10px 12px
+            calc(10px + env(safe-area-inset-bottom));
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 8px;
+
+        background:
+            rgba(3, 18, 35, 0.94);
+
+        backdrop-filter: blur(16px);
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.12);
+
+        box-shadow:
+            0 -8px 30px
+            rgba(0,0,0,.30);
+
+    }
+
+
+    .btn-anterior,
+    .btn-siguiente {
+
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 50px;
+
+        margin: 0;
+
+    }
+
+
+    .btn-anterior {
+
+        background:
+            rgba(255,255,255,.08);
+
+    }
+
+
+    .btn-siguiente {
+
+        background:
+            linear-gradient(
+                135deg,
+                #ffe261,
+                #ffad3d
+            );
+
+    }
+
+}
+/* =====================================================
+   AJUSTE FINAL PARA CELULAR
+   Evita que los botones tapen la cuarta respuesta
+===================================================== */
+
+@media (max-width: 650px) {
+
+    /* Deja espacio abajo para la barra fija */
+    .pantalla-quiz {
+        padding-bottom: 130px;
+    }
+
+
+    /* Deja espacio dentro de la tarjeta */
+    .tarjeta-mision {
+        padding-bottom: 110px;
+    }
+
+
+    /* Barra fija inferior */
+    .navegacion-mision {
+
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        z-index: 1000;
+
+        width: 100%;
+
+        margin: 0;
+
+        padding:
+            8px 10px
+            calc(8px + env(safe-area-inset-bottom));
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        background:
+            rgba(3, 18, 35, 0.96);
+
+        backdrop-filter: blur(16px);
+
+        border-top:
+            1px solid rgba(255,255,255,.12);
+
+        box-shadow:
+            0 -5px 20px rgba(0,0,0,.25);
+    }
+
+
+    /* Botones Anterior y Siguiente */
+    .btn-anterior,
+    .btn-siguiente {
+
+        flex: 1;
+
+        width: auto;
+
+        min-width: 0;
+
+        min-height: 46px;
+
+        margin: 0;
+
+        padding: 9px 10px;
+
+        font-size: 11px;
+    }
+
+}

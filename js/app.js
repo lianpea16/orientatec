@@ -33,6 +33,9 @@ const botonReiniciar =
 const btnSiguiente =
     document.getElementById("btnSiguiente");
 
+const btnAnterior =
+    document.getElementById("btnAnterior");
+
 const btnIniciarMisiones =
     document.getElementById("btnIniciarMisiones");
 
@@ -124,6 +127,12 @@ let temporizador = null;
 let respondida = false;
 
 let ordenSeleccionado = [];
+
+// Guarda el estado antes de responder cada pregunta
+let historialEstados = [];
+
+// Guarda qué había respondido el estudiante
+let respuestasUsuario = [];
 
 // =====================================================
 // 21 CARRERAS REALES
@@ -706,7 +715,7 @@ const preguntas = [
         icono: "🛣️",
 
         pregunta:
-            "¿Qué tipo de camino de formación te atrae más?",
+            "¿Qué formación Técnica te atrae más?",
 
         descripcion:
             "No hay una respuesta mejor que otra.",
@@ -715,7 +724,7 @@ const preguntas = [
 
             {
                 texto:
-                    "🎓 Una formación de varios años con Bachillerato Técnico",
+                    "🎓 Bachillerato Técnico",
 
                 afinidad: {
                     ruta_larga: 4
@@ -724,7 +733,7 @@ const preguntas = [
 
             {
                 texto:
-                    "⚡ Una carrera técnica más directa y práctica",
+                    "⚡ Técnico General",
 
                 afinidad: {
                     ruta_corta: 4
@@ -733,7 +742,7 @@ const preguntas = [
 
             {
                 texto:
-                    "🚀 Especializarme después de ser bachiller",
+                    "🚀 Técnico Especialista",
 
                 afinidad: {
                     especialista: 4
@@ -749,7 +758,69 @@ const preguntas = [
 
         ]
     },
+  
+  {
+    tipo: "preferencia",
 
+    formato: "visual",
+
+    icono: "👀",
+
+    pregunta:
+        "Sin pensarlo demasiado, ¿cuál de estas escenas te atrae más?",
+
+    descripcion:
+        "Escoge aquello que te gustaría experimentar.",
+
+    opciones: [
+
+        {
+            texto:
+                "💻\nTecnología",
+
+            afinidad: {
+                tecnologia: 5,
+                programacion: 2,
+                soporte: 2
+            }
+        },
+
+        {
+            texto:
+                "🔧\nTaller",
+
+            afinidad: {
+                herramientas: 5,
+                mecanica: 2,
+                diagnostico: 2
+            }
+        },
+
+        {
+            texto:
+                "🍰\nCocina creativa",
+
+            afinidad: {
+                gastronomia: 4,
+                reposteria: 4,
+                creatividad: 2
+            }
+        },
+
+        {
+            texto:
+                "📊\nNegocios",
+
+            afinidad: {
+                organizacion: 3,
+                finanzas: 3,
+                oficina: 3
+            }
+        }
+
+    ]
+
+},
 
     {
         tipo: "preferencia",
@@ -1641,68 +1712,7 @@ const preguntas = [
     ]
 
 },
-{
-    tipo: "preferencia",
 
-    formato: "visual",
-
-    icono: "👀",
-
-    pregunta:
-        "Sin pensarlo demasiado, ¿cuál de estas escenas te atrae más?",
-
-    descripcion:
-        "Escoge aquello que te gustaría experimentar.",
-
-    opciones: [
-
-        {
-            texto:
-                "💻\nTecnología",
-
-            afinidad: {
-                tecnologia: 5,
-                programacion: 2,
-                soporte: 2
-            }
-        },
-
-        {
-            texto:
-                "🔧\nTaller",
-
-            afinidad: {
-                herramientas: 5,
-                mecanica: 2,
-                diagnostico: 2
-            }
-        },
-
-        {
-            texto:
-                "🍰\nCocina creativa",
-
-            afinidad: {
-                gastronomia: 4,
-                reposteria: 4,
-                creatividad: 2
-            }
-        },
-
-        {
-            texto:
-                "📊\nNegocios",
-
-            afinidad: {
-                organizacion: 3,
-                finanzas: 3,
-                oficina: 3
-            }
-        }
-
-    ]
-
-},
 {
     tipo: "ordenar",
 
@@ -1897,6 +1907,10 @@ function iniciarJuego() {
 
     racha = 0;
 
+    historialEstados = [];
+
+    respuestasUsuario = [];
+
     actualizarHUD();
 
 
@@ -1936,6 +1950,24 @@ function mostrarPregunta() {
     detenerTemporizador();
 
     respondida = false;
+
+    if (
+    preguntaActual === 0
+) {
+
+    btnAnterior.classList.add(
+        "oculto"
+    );
+
+}
+
+else {
+
+    btnAnterior.classList.remove(
+        "oculto"
+    );
+
+}
 
     ordenSeleccionado = [];
 
@@ -2064,17 +2096,21 @@ function mostrarPregunta() {
     // PREGUNTA DE ORDEN
     // =============================================
 
-    if (
-        pregunta.tipo === "ordenar"
-    ) {
+   if (
+    pregunta.tipo === "ordenar"
+) {
 
-        mostrarPreguntaOrdenar(
-            pregunta
-        );
+    mostrarPreguntaOrdenar(
+        pregunta
+    );
 
-        return;
 
-    }
+    mostrarRespuestaAnterior();
+
+
+    return;
+
+}
 
 
     // =============================================
@@ -2141,8 +2177,102 @@ function mostrarPregunta() {
 
         }
     );
+   mostrarRespuestaAnterior();
+}
+
+// =====================================================
+// MOSTRAR RESPUESTA QUE HABÍA ELEGIDO
+// =====================================================
+
+function mostrarRespuestaAnterior() {
+
+    const respuestaAnterior =
+        respuestasUsuario[
+            preguntaActual
+        ];
+
+
+    if (!respuestaAnterior) {
+
+        return;
+
+    }
+
+
+    // Pregunta normal
+
+    if (
+        respuestaAnterior.tipo
+        === "opcion"
+    ) {
+
+        const botones =
+            opcionesQuiz.querySelectorAll(
+                ".opcion-quiz"
+            );
+
+
+        const boton =
+            botones[
+                respuestaAnterior.indice
+            ];
+
+
+        if (boton) {
+
+            boton.classList.add(
+                "respuesta-anterior"
+            );
+
+        }
+
+
+        feedbackQuiz.innerHTML = `
+
+            ✏️ <strong>
+                Estás editando esta pregunta.
+            </strong>
+
+            La opción amarilla fue tu respuesta anterior.
+            Puedes elegirla nuevamente o cambiarla.
+
+        `;
+
+
+        feedbackQuiz.classList.remove(
+            "oculto"
+        );
+
+    }
+
+
+    // Pregunta ordenar
+
+    if (
+        respuestaAnterior.tipo
+        === "orden"
+    ) {
+
+        feedbackQuiz.innerHTML = `
+
+            ✏️ <strong>
+                Estás editando este reto.
+            </strong>
+
+            Vuelve a seleccionar los pasos
+            en el orden que quieras.
+
+        `;
+
+
+        feedbackQuiz.classList.remove(
+            "oculto"
+        );
+
+    }
 
 }
+
 // =====================================================
 // MOSTRAR RETO DE ORDEN
 // =====================================================
@@ -2382,6 +2512,7 @@ function comprobarOrden(
 
     respondida = true;
 
+    guardarEstadoAntesDeResponder();
 
     const idsElegidos =
         ordenSeleccionado.map(
@@ -2392,7 +2523,17 @@ function comprobarOrden(
             }
         );
 
+       respuestasUsuario[
+    preguntaActual
+] = {
 
+    tipo: "orden",
+
+    orden: [
+        ...idsElegidos
+    ]
+
+};
     const correcto =
         idsElegidos.every(
             function (
@@ -2519,6 +2660,26 @@ function comprobarOrden(
     );
 
 }
+
+// =====================================================
+// GUARDAR ESTADO ANTES DE RESPONDER
+// =====================================================
+
+function guardarEstadoAntesDeResponder() {
+
+    historialEstados[preguntaActual] = {
+
+        afinidades: {
+            ...afinidades
+        },
+
+        xp: xp,
+
+        racha: racha
+
+    };
+
+}
 // =====================================================
 // RESPONDER
 // =====================================================
@@ -2534,7 +2695,44 @@ function responder(
         return;
 
     }
+        // Guardamos cómo estaba el juego
+    // antes de esta respuesta
 
+    guardarEstadoAntesDeResponder();
+
+
+    // Guardamos qué seleccionó
+
+    respuestasUsuario[
+        preguntaActual
+    ] = {
+
+        tipo: "opcion",
+
+        indice:
+            indiceSeleccionado,
+
+        texto:
+            opcion.texto
+
+    };
+
+
+    // Quitamos la marca de respuesta anterior
+
+    document
+        .querySelectorAll(
+            ".respuesta-anterior"
+        )
+        .forEach(
+            function (elemento) {
+
+                elemento.classList.remove(
+                    "respuesta-anterior"
+                );
+
+            }
+        );
 
     respondida = true;
 
@@ -3355,6 +3553,103 @@ btnCambiarNivel.addEventListener(
         pantallaDatos.classList.remove(
             "oculto"
         );
+
+    }
+);
+// =====================================================
+// VOLVER A LA PREGUNTA ANTERIOR
+// =====================================================
+
+btnAnterior.addEventListener(
+    "click",
+    function () {
+
+        if (
+            preguntaActual <= 0
+        ) {
+
+            return;
+
+        }
+
+
+        detenerTemporizador();
+
+
+        const preguntaAnterior =
+            preguntaActual - 1;
+
+
+        const estadoAnterior =
+            historialEstados[
+                preguntaAnterior
+            ];
+
+
+        // Restauramos las puntuaciones
+        // que había ANTES de esa pregunta
+
+        if (estadoAnterior) {
+
+            afinidades = {
+
+                ...estadoAnterior
+                    .afinidades
+
+            };
+
+
+            xp =
+                estadoAnterior.xp;
+
+
+            racha =
+                estadoAnterior.racha;
+
+
+            actualizarHUD();
+
+        }
+
+
+        // Nos movemos hacia atrás
+
+        preguntaActual =
+            preguntaAnterior;
+
+
+        // Eliminamos estados posteriores
+        // porque ahora el estudiante
+        // puede cambiar su camino
+
+        historialEstados =
+            historialEstados.slice(
+                0,
+                preguntaAnterior
+            );
+
+
+        // Conservamos únicamente
+        // la respuesta anterior
+        // para enseñársela visualmente
+
+        respuestasUsuario =
+            respuestasUsuario.slice(
+                0,
+                preguntaAnterior + 1
+            );
+
+
+        mostrarPregunta();
+
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
 
     }
 );
