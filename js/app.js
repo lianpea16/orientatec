@@ -739,7 +739,7 @@ function crearPreguntaRuta() {
             },
 
             {
-                texto: "🌈\nTodavía\nno lo sé",
+                texto: "🤷‍♂️ 🤷‍♀️\nTodavía\nno lo sé",
                 ruta: "mixto",
 
                 afinidad: {}
@@ -772,7 +772,7 @@ function crearPreguntaRuta() {
             },
 
             {
-                texto: "🌈\nTodavía\nno lo sé",
+                texto: "🤷‍♂️ 🤷‍♀️\nTodavía\nno lo sé",
                 ruta: "mixto",
 
                 afinidad: {}
