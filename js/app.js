@@ -134,6 +134,10 @@ let historialEstados = [];
 // Guarda qué había respondido el estudiante
 let respuestasUsuario = [];
 
+let preguntasActivas = [];
+
+let rutaElegida = "";
+
 // =====================================================
 // 21 CARRERAS REALES
 // =====================================================
@@ -704,176 +708,337 @@ const carreras = [
 
 
 // =====================================================
-// PREGUNTAS / MISIONES
+// PREGUNTA INICIAL DE RUTA
 // =====================================================
 
-const preguntas = [
+function crearPreguntaRuta() {
+
+    let opciones = [];
+
+
+    if (nivelEstudiante === "bachiller") {
+
+        opciones = [
+
+            {
+                texto: "🛠️\nTécnico\nGeneral",
+                ruta: "tg",
+
+                afinidad: {
+                    ruta_corta: 2
+                }
+            },
+
+            {
+                texto: "🚀\nTécnico\nEspecialista",
+                ruta: "te",
+
+                afinidad: {
+                    especialista: 2
+                }
+            },
+
+            {
+                texto: "🌈\nTodavía\nno lo sé",
+                ruta: "mixto",
+
+                afinidad: {}
+            }
+
+        ];
+
+    }
+
+    else {
+
+        opciones = [
+
+            {
+                texto: "🛠️\nTécnico\nGeneral",
+                ruta: "tg",
+
+                afinidad: {
+                    ruta_corta: 2
+                }
+            },
+
+            {
+                texto: "🎓\nBachillerato\nTécnico",
+                ruta: "bt",
+
+                afinidad: {
+                    ruta_larga: 2
+                }
+            },
+
+            {
+                texto: "🌈\nTodavía\nno lo sé",
+                ruta: "mixto",
+
+                afinidad: {}
+            }
+
+        ];
+
+    }
+
+
+    return {
+
+        esRuta: true,
+
+        tipo: "preferencia",
+
+        formato: "burbujas",
+
+        icono: "🧭",
+
+        pregunta:
+            "¿Qué tipo de formación te atrae más?",
+
+        descripcion:
+            "Toca una burbuja y comienza tu recorrido.",
+
+        opciones: opciones
+
+    };
+
+}
+
+// =====================================================
+// PREGUNTAS COMUNES
+// =====================================================
+
+const preguntasComunes = [
+
+    // =================================================
+    // 02 - EXPLORACIÓN GENERAL
+    // =================================================
 
     {
         tipo: "preferencia",
 
-        icono: "🛣️",
+        icono: "🎯",
 
         pregunta:
-            "¿Qué formación Técnica te atrae más?",
+            "Si hoy pudieras probar una actividad nueva, ¿cuál escogerías?",
 
         descripcion:
-            "No hay una respuesta mejor que otra.",
+            "No pienses en cuál sabes hacer. Elige la que más curiosidad te dé.",
 
         opciones: [
 
             {
-                texto:
-                    "🎓 Bachillerato Técnico",
+                texto: "💻 Explorar tecnología y computadoras",
 
                 afinidad: {
-                    ruta_larga: 4
+                    tecnologia: 4,
+                    soporte: 2,
+                    redes: 1,
+                    programacion: 1
                 }
             },
 
             {
-                texto:
-                    "⚡ Técnico General",
+                texto: "🔧 Reparar o construir algo",
 
                 afinidad: {
-                    ruta_corta: 4
+                    herramientas: 4,
+                    diagnostico: 2,
+                    mecanica: 1,
+                    precision: 1
                 }
             },
 
             {
-                texto:
-                    "🚀 Técnico Especialista",
+                texto: "🍰 Preparar y crear alimentos",
 
                 afinidad: {
-                    especialista: 4
+                    gastronomia: 4,
+                    reposteria: 3,
+                    creatividad: 2
                 }
             },
 
             {
-                texto:
-                    "🤔 Todavía no estoy seguro",
+                texto: "👥 Organizar y trabajar con personas",
 
+                afinidad: {
+                    organizacion: 4,
+                    comunicacion: 2,
+                    liderazgo: 2,
+                    oficina: 2
+                }
+            }
+
+        ]
+    },
+
+
+    // =================================================
+    // 03 - PASTELERÍA
+    // =================================================
+
+    {
+        tipo: "ordenar",
+
+        icono: "🎂",
+
+        pregunta:
+            "Vas a preparar un pastel. Ordena el proceso.",
+
+        descripcion:
+            "Toca los pasos desde el primero hasta el último.",
+
+        opciones: [
+
+            {
+                id: "mezclar",
+                nombreCorto: "Mezclar",
+                texto: "🥣 Preparar y mezclar los ingredientes"
+            },
+
+            {
+                id: "hornear",
+                nombreCorto: "Hornear",
+                texto: "🔥 Hornear la mezcla"
+            },
+
+            {
+                id: "enfriar",
+                nombreCorto: "Enfriar",
+                texto: "❄️ Dejar enfriar"
+            },
+
+            {
+                id: "decorar",
+                nombreCorto: "Decorar",
+                texto: "🍓 Decorar y presentar"
+            }
+
+        ],
+
+        ordenCorrecto: [
+            "mezclar",
+            "hornear",
+            "enfriar",
+            "decorar"
+        ],
+
+        afinidadCorrecta: {
+            reposteria: 3,
+            gastronomia: 2,
+            precision: 1,
+            creatividad: 1
+        }
+    },
+
+
+    // =================================================
+    // 04 - MECÁNICA
+    // =================================================
+
+    {
+        tipo: "reto",
+
+        icono: "🚗",
+
+        pregunta:
+            "Un vehículo comienza a hacer un ruido extraño. ¿Qué sería lo más razonable hacer?",
+
+        descripcion:
+            "🚗 RETO MECÁNICO • Tienes 20 segundos",
+
+        opciones: [
+
+            {
+                texto: "🔍 Revisar de dónde proviene la falla",
+
+                correcta: true,
+
+                afinidad: {
+                    mecanica: 3,
+                    diagnostico: 2,
+                    herramientas: 1
+                }
+            },
+
+            {
+                texto: "🎵 Subir el volumen para no escucharlo",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "🚙 Seguir usándolo sin revisar",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "🎲 Cambiar piezas al azar",
+                correcta: false,
                 afinidad: {}
             }
 
         ]
     },
-  
-  {
-    tipo: "preferencia",
 
-    formato: "visual",
 
-    icono: "👀",
-
-    pregunta:
-        "Sin pensarlo demasiado, ¿cuál de estas escenas te atrae más?",
-
-    descripcion:
-        "Escoge aquello que te gustaría experimentar.",
-
-    opciones: [
-
-        {
-            texto:
-                "💻\nTecnología",
-
-            afinidad: {
-                tecnologia: 5,
-                programacion: 2,
-                soporte: 2
-            }
-        },
-
-        {
-            texto:
-                "🔧\nTaller",
-
-            afinidad: {
-                herramientas: 5,
-                mecanica: 2,
-                diagnostico: 2
-            }
-        },
-
-        {
-            texto:
-                "🍰\nCocina creativa",
-
-            afinidad: {
-                gastronomia: 4,
-                reposteria: 4,
-                creatividad: 2
-            }
-        },
-
-        {
-            texto:
-                "📊\nNegocios",
-
-            afinidad: {
-                organizacion: 3,
-                finanzas: 3,
-                oficina: 3
-            }
-        }
-
-    ]
-
-},
+    // =================================================
+    // 05 - SISTEMAS TÉCNICOS
+    // =================================================
 
     {
         tipo: "preferencia",
 
-        icono: "✨",
+        icono: "⚙️",
 
         pregunta:
-            "Si te dieran una tarde completa para crear algo, ¿qué escogerías?",
+            "¿Cuál de estas fallas te daría más curiosidad investigar?",
 
         descripcion:
-            "Elige aquello que realmente te daría curiosidad.",
+            "🎯 Revienta la burbuja que más te llame.",
 
         opciones: [
 
             {
-                texto:
-                    "💻 Crear una app, programa o solución digital",
+                texto: "⚡ Una instalación eléctrica dejó de funcionar",
 
                 afinidad: {
-                    tecnologia: 3,
-                    programacion: 4,
-                    logica: 2
+                    electricidad: 5,
+                    diagnostico: 2,
+                    herramientas: 1
                 }
             },
 
             {
-                texto:
-                    "🛠️ Construir, reparar o modificar algo físico",
+                texto: "❄️ Un aire acondicionado no enfría",
 
                 afinidad: {
-                    herramientas: 4,
-                    diagnostico: 2
+                    refrigeracion: 5,
+                    diagnostico: 2,
+                    herramientas: 1
                 }
             },
 
             {
-                texto:
-                    "🎨 Crear algo visual, promocional o creativo",
+                texto: "🔌 Un equipo electrónico dejó de responder",
 
                 afinidad: {
-                    creatividad: 4,
-                    marketing: 2
+                    electronica: 5,
+                    tecnologia: 2,
+                    diagnostico: 1
                 }
             },
 
             {
-                texto:
-                    "🍰 Preparar algo que otras personas puedan disfrutar",
+                texto: "🌐 Una computadora perdió la conexión",
 
                 afinidad: {
-                    gastronomia: 3,
-                    reposteria: 2,
-                    servicio: 2
+                    soporte: 4,
+                    redes: 4,
+                    tecnologia: 2
                 }
             }
 
@@ -881,58 +1046,45 @@ const preguntas = [
     },
 
 
+    // =================================================
+    // 06 - MADERA VS METAL
+    // =================================================
+
     {
         tipo: "preferencia",
 
-        icono: "🧠",
+        formato: "duelo",
+
+        icono: "⚔️",
 
         pregunta:
-            "Cuando algo no funciona, ¿qué parte del proceso disfrutas más?",
+            "Si tuvieras que construir algo con tus manos, ¿cuál escogerías?",
 
         descripcion:
-            "Piensa en cómo reaccionas ante problemas.",
+            "⚔️ DUELO DE TALLERES",
 
         opciones: [
 
             {
                 texto:
-                    "🔍 Investigar hasta descubrir la causa",
+                    "🪵 Diseñar y construir un mueble",
 
                 afinidad: {
-                    diagnostico: 4,
-                    logica: 3
+                    madera: 5,
+                    herramientas: 3,
+                    creatividad: 2,
+                    precision: 2
                 }
             },
 
             {
                 texto:
-                    "📋 Organizar los pasos para solucionarlo",
+                    "🔥 Construir una estructura de metal",
 
                 afinidad: {
-                    organizacion: 4,
-                    oficina: 1
-                }
-            },
-
-            {
-                texto:
-                    "👥 Reunir personas y coordinar una solución",
-
-                afinidad: {
-                    liderazgo: 3,
-                    comunicacion: 3,
-                    rrhh: 2
-                }
-            },
-
-            {
-                texto:
-                    "💡 Imaginar una solución diferente",
-
-                afinidad: {
-                    creatividad: 4,
-                    programacion: 1,
-                    marketing: 1
+                    metal: 5,
+                    herramientas: 3,
+                    precision: 3
                 }
             }
 
@@ -940,77 +1092,20 @@ const preguntas = [
     },
 
 
-    {
-        tipo: "preferencia",
-
-        icono: "🏢",
-
-        pregunta:
-            "¿Cuál de estos ambientes te resulta más interesante?",
-
-        descripcion:
-            "Imagínate trabajando allí varias horas.",
-
-        opciones: [
-
-            {
-                texto:
-                    "🏦 Banco, oficina financiera o caja",
-
-                afinidad: {
-                    finanzas: 4,
-                    numeros: 3,
-                    oficina: 2
-                }
-            },
-
-            {
-                texto:
-                    "🔧 Taller con herramientas y equipos",
-
-                afinidad: {
-                    herramientas: 4,
-                    mecanica: 2,
-                    electricidad: 1
-                }
-            },
-
-            {
-                texto:
-                    "☕ Restaurante, cocina o cafetería",
-
-                afinidad: {
-                    gastronomia: 3,
-                    servicio: 4,
-                    cliente: 2
-                }
-            },
-
-            {
-                texto:
-                    "💻 Laboratorio de computación y tecnología",
-
-                afinidad: {
-                    tecnologia: 4,
-                    soporte: 2,
-                    redes: 1
-                }
-            }
-
-        ]
-    },
-
+    // =================================================
+    // 07 - FINANZAS
+    // =================================================
 
     {
         tipo: "reto",
 
-        icono: "💸",
+        icono: "💰",
 
         pregunta:
-            "Un producto cuesta C$800 y tiene 25% de descuento. ¿Cuánto pagarías?",
+            "Un artículo cuesta C$800 y tiene 25% de descuento. ¿Cuánto pagarías?",
 
         descripcion:
-            "RETO RELÁMPAGO • Tienes 20 segundos",
+            "💰 RETO DE NÚMEROS • Tienes 20 segundos",
 
         opciones: [
 
@@ -1020,32 +1115,27 @@ const preguntas = [
                 correcta: true,
 
                 afinidad: {
-                    numeros: 2,
-                    finanzas: 2
+                    numeros: 3,
+                    finanzas: 3,
+                    detalle: 1
                 }
             },
 
             {
                 texto: "C$650",
-
                 correcta: false,
-
                 afinidad: {}
             },
 
             {
                 texto: "C$700",
-
                 correcta: false,
-
                 afinidad: {}
             },
 
             {
-                texto: "C$575",
-
+                texto: "C$750",
                 correcta: false,
-
                 afinidad: {}
             }
 
@@ -1053,424 +1143,27 @@ const preguntas = [
     },
 
 
-    {
-        tipo: "preferencia",
-
-        icono: "🛠️",
-
-        pregunta:
-            "Si pudieras aprender una habilidad práctica hoy mismo, ¿cuál elegirías?",
-
-        descripcion:
-            "Aunque nunca la hayas realizado antes.",
-
-        opciones: [
-
-            {
-                texto:
-                    "🚗 Diagnosticar una falla en un automóvil",
-
-                afinidad: {
-                    mecanica: 5,
-                    diagnostico: 3
-                }
-            },
-
-            {
-                texto:
-                    "⚡ Instalar o reparar un sistema eléctrico",
-
-                afinidad: {
-                    electricidad: 5,
-                    herramientas: 2
-                }
-            },
-
-            {
-                texto:
-                    "🔥 Aprender a cortar y soldar metal",
-
-                afinidad: {
-                    metal: 5,
-                    herramientas: 3,
-                    precision: 2
-                }
-            },
-
-            {
-                texto:
-                    "🪵 Diseñar y construir un mueble",
-
-                afinidad: {
-                    madera: 5,
-                    creatividad: 3,
-                    precision: 2
-                }
-            }
-
-        ]
-    },
-
-
-    {
-        tipo: "preferencia",
-
-        icono: "🗣️",
-
-        pregunta:
-            "¿Qué tipo de comunicación disfrutas más?",
-
-        descripcion:
-            "Piensa en aquello que se te hace más natural.",
-
-        opciones: [
-
-            {
-                texto:
-                    "🌎 Hablar y aprender otros idiomas",
-
-                afinidad: {
-                    idiomas: 5,
-                    comunicacion: 3
-                }
-            },
-
-            {
-                texto:
-                    "📣 Convencer, promocionar o vender una idea",
-
-                afinidad: {
-                    marketing: 4,
-                    ventas: 4,
-                    comunicacion: 3
-                }
-            },
-
-            {
-                texto:
-                    "👥 Escuchar y ayudar a otras personas",
-
-                afinidad: {
-                    rrhh: 4,
-                    comunicacion: 4
-                }
-            },
-
-            {
-                texto:
-                    "📑 Comunicar información de manera ordenada",
-
-                afinidad: {
-                    oficina: 4,
-                    organizacion: 3,
-                    documentacion: 2
-                }
-            }
-
-        ]
-    },
-
+    // =================================================
+    // 08 - INGLÉS
+    // =================================================
 
     {
         tipo: "reto",
 
-        icono: "💻",
-
-        pregunta:
-            "Observa: 3, 6, 12, 24... ¿qué número sigue?",
-
-        descripcion:
-            "RETO DE LÓGICA • Tienes 20 segundos",
-
-        opciones: [
-
-            {
-                texto: "30",
-
-                correcta: false,
-
-                afinidad: {}
-            },
-
-            {
-                texto: "36",
-
-                correcta: false,
-
-                afinidad: {}
-            },
-
-            {
-                texto: "48",
-
-                correcta: true,
-
-                afinidad: {
-                    logica: 3,
-                    programacion: 2
-                }
-            },
-
-            {
-                texto: "50",
-
-                correcta: false,
-
-                afinidad: {}
-            }
-
-        ]
-    },
-
-
-    {
-        tipo: "reto",
-
-        icono: "🍰",
-
-        pregunta:
-            "Una receta para 8 personas usa 4 huevos. ¿Cuántos necesitas para 24 personas?",
-
-        descripcion:
-            "RETO GASTRONÓMICO • Tienes 20 segundos",
-
-        opciones: [
-
-            {
-                texto: "8",
-
-                correcta: false,
-
-                afinidad: {}
-            },
-
-            {
-                texto: "10",
-
-                correcta: false,
-
-                afinidad: {}
-            },
-
-            {
-                texto: "12",
-
-                correcta: true,
-
-                afinidad: {
-                    gastronomia: 2,
-                    reposteria: 2,
-                    precision: 2
-                }
-            },
-
-            {
-                texto: "16",
-
-                correcta: false,
-
-                afinidad: {}
-            }
-
-        ]
-    },
-
-
-    {
-        tipo: "preferencia",
-
-        icono: "🔌",
-
-        pregunta:
-            "¿Cuál de estos sistemas te produce más curiosidad?",
-
-        descripcion:
-            "¿Cuál abrirías para aprender cómo funciona?",
-
-        opciones: [
-
-            {
-                texto:
-                    "🖥️ Computadoras, redes y conexión a internet",
-
-                afinidad: {
-                    tecnologia: 4,
-                    soporte: 4,
-                    redes: 5
-                }
-            },
-
-            {
-                texto:
-                    "📺 Electrodomésticos y circuitos electrónicos",
-
-                afinidad: {
-                    electronica: 5,
-                    diagnostico: 2
-                }
-            },
-
-            {
-                texto:
-                    "❄️ Aire acondicionado y refrigeración",
-
-                afinidad: {
-                    refrigeracion: 5,
-                    diagnostico: 2
-                }
-            },
-
-            {
-                texto:
-                    "⚡ Redes, cableado y sistemas eléctricos",
-
-                afinidad: {
-                    electricidad: 5,
-                    diagnostico: 2
-                }
-            }
-
-        ]
-    },
-
-
-    {
-        tipo: "preferencia",
-
-        icono: "📂",
-
-        pregunta:
-            "¿Cuál de estas responsabilidades elegirías primero?",
-
-        descripcion:
-            "Imagina que puedes probar cualquiera durante un día.",
-
-        opciones: [
-
-            {
-                texto:
-                    "🚢 Organizar documentos de importación y exportación",
-
-                afinidad: {
-                    aduanas: 5,
-                    documentacion: 4,
-                    detalle: 2
-                }
-            },
-
-            {
-                texto:
-                    "👥 Organizar nómina y procesos del personal",
-
-                afinidad: {
-                    rrhh: 5,
-                    organizacion: 3,
-                    numeros: 1
-                }
-            },
-
-            {
-                texto:
-                    "🏦 Atender operaciones y clientes bancarios",
-
-                afinidad: {
-                    finanzas: 4,
-                    cliente: 4,
-                    numeros: 2
-                }
-            },
-
-            {
-                texto:
-                    "📅 Manejar agenda, documentos y reuniones",
-
-                afinidad: {
-                    oficina: 5,
-                    organizacion: 4
-                }
-            }
-
-        ]
-    },
-
-
-    {
-        tipo: "preferencia",
-
-        icono: "🎨",
-
-        pregunta:
-            "Te piden crear algo que impresione a otras personas. ¿Qué haces?",
-
-        descripcion:
-            "Escoge el proyecto que más te emocione.",
-
-        opciones: [
-
-            {
-                texto:
-                    "🎂 Diseñar y decorar un pastel",
-
-                afinidad: {
-                    reposteria: 5,
-                    creatividad: 4,
-                    precision: 2
-                }
-            },
-
-            {
-                texto:
-                    "🪵 Diseñar un mueble original",
-
-                afinidad: {
-                    madera: 4,
-                    creatividad: 4,
-                    precision: 2
-                }
-            },
-
-            {
-                texto:
-                    "📱 Crear una campaña para redes sociales",
-
-                afinidad: {
-                    marketing: 5,
-                    creatividad: 4,
-                    comunicacion: 2
-                }
-            },
-
-            {
-                texto:
-                    "💻 Diseñar una solución digital",
-
-                afinidad: {
-                    programacion: 4,
-                    tecnologia: 4,
-                    creatividad: 2
-                }
-            }
-
-        ]
-    },
-
-
-    {
-        tipo: "reto",
+        formato: "vf",
 
         icono: "🌎",
 
         pregunta:
-            "Un visitante te dice: “Can you help me?”. ¿Qué significa?",
+            "“Good afternoon” significa “Buenas tardes”.",
 
         descripcion:
-            "RETO DE INGLÉS • Tienes 20 segundos",
+            "🌎 VERDADERO O FALSO",
 
         opciones: [
 
             {
-                texto:
-                    "¿Puedes ayudarme?",
+                texto: "✅ VERDADERO",
 
                 correcta: true,
 
@@ -1481,95 +1174,81 @@ const preguntas = [
             },
 
             {
-                texto:
-                    "¿Dónde trabajas?",
-
+                texto: "❌ FALSO",
                 correcta: false,
-
-                afinidad: {}
-            },
-
-            {
-                texto:
-                    "¿Cuánto cuesta?",
-
-                correcta: false,
-
-                afinidad: {}
-            },
-
-            {
-                texto:
-                    "Hasta mañana",
-
-                correcta: false,
-
                 afinidad: {}
             }
 
         ]
     },
 
+
+    // =================================================
+    // 09 - CREATIVIDAD
+    // =================================================
 
     {
         tipo: "preferencia",
 
-        icono: "🔎",
+        formato: "visual",
+
+        icono: "🎨",
 
         pregunta:
-            "¿Qué clase de error te daría más satisfacción encontrar?",
+            "Te piden crear algo que sorprenda a otras personas. ¿Qué escogerías?",
 
         descripcion:
-            "Ese momento de: ¡ya descubrí qué estaba mal!",
+            "Elige el proyecto que más disfrutarías.",
 
         opciones: [
 
             {
-                texto:
-                    "💰 Un número incorrecto en las cuentas",
+                texto: "📱\nUna campaña\npara redes",
 
                 afinidad: {
-                    detalle: 4,
-                    numeros: 4,
-                    finanzas: 3
+                    marketing: 4,
+                    creatividad: 4,
+                    comunicacion: 2
                 }
             },
 
             {
-                texto:
-                    "🐛 Un error dentro de un programa",
+                texto: "🎂\nUn pastel\nllamativo",
 
                 afinidad: {
-                    programacion: 5,
-                    logica: 4,
-                    tecnologia: 2
+                    reposteria: 4,
+                    creatividad: 4,
+                    gastronomia: 2
                 }
             },
 
             {
-                texto:
-                    "🚗 Una falla escondida en un motor",
+                texto: "🪑\nUn mueble\noriginal",
 
                 afinidad: {
-                    mecanica: 5,
-                    diagnostico: 4
+                    madera: 4,
+                    creatividad: 3,
+                    precision: 2
                 }
             },
 
             {
-                texto:
-                    "📋 Un proceso desorganizado en una empresa",
+                texto: "💻\nUna aplicación\ndigital",
 
                 afinidad: {
-                    organizacion: 5,
-                    administracion: 3,
-                    oficina: 2
+                    programacion: 4,
+                    tecnologia: 3,
+                    logica: 2
                 }
             }
 
         ]
     },
 
+
+    // =================================================
+    // 10 - PERSONAS Y SERVICIO
+    // =================================================
 
     {
         tipo: "preferencia",
@@ -1577,225 +1256,1187 @@ const preguntas = [
         icono: "🤝",
 
         pregunta:
-            "Si tu trabajo implicara atender personas, ¿qué situación preferirías?",
+            "¿Cuál de estas situaciones disfrutarías más?",
 
         descripcion:
-            "Escoge la experiencia que más disfrutarías.",
+            "Piensa en cuál se parece más a ti.",
 
         opciones: [
 
             {
-                texto:
-                    "☕ Atender clientes en cafetería o restaurante",
+                texto: "🍽️ Atender muy bien a un cliente",
 
                 afinidad: {
                     servicio: 5,
                     cliente: 4,
-                    gastronomia: 1
+                    comunicacion: 2
                 }
             },
 
             {
-                texto:
-                    "🏦 Orientar a alguien sobre un servicio financiero",
-
-                afinidad: {
-                    finanzas: 3,
-                    cliente: 5,
-                    oficina: 2
-                }
-            },
-
-            {
-                texto:
-                    "👥 Ayudar a una persona dentro de una empresa",
+                texto: "👥 Ayudar a resolver una situación entre compañeros",
 
                 afinidad: {
                     rrhh: 5,
-                    comunicacion: 4
+                    comunicacion: 4,
+                    liderazgo: 2
                 }
             },
 
             {
-                texto:
-                    "📣 Convencer a alguien de probar un producto",
+                texto: "🗣️ Explicar un producto y convencer a alguien",
 
                 afinidad: {
-                    ventas: 5,
-                    marketing: 4,
+                    ventas: 4,
+                    marketing: 3,
                     comunicacion: 3
+                }
+            },
+
+            {
+                texto: "🌎 Ayudar a una persona usando otro idioma",
+
+                afinidad: {
+                    idiomas: 5,
+                    comunicacion: 4,
+                    cliente: 2
                 }
             }
 
         ]
     },
 
+
+    // =================================================
+    // 11 - OFICINA Y ORGANIZACIÓN
+    // =================================================
+
     {
-    tipo: "preferencia",
+        tipo: "preferencia",
 
-    formato: "duelo",
+        icono: "📋",
 
-    icono: "⚔️",
+        pregunta:
+            "En una empresa te dejan escoger una responsabilidad. ¿Cuál tomarías?",
 
-    pregunta:
-        "Solo puedes elegir uno de estos dos proyectos. ¿Cuál aceptarías?",
+        descripcion:
+            "🎯 Escoge la que más te atraiga.",
 
-    descripcion:
-        "No pienses en cuál parece más fácil. Elige el que te emocione más.",
+        opciones: [
 
-    opciones: [
+            {
+                texto: "📅 Organizar agendas, reuniones y documentos",
 
-        {
-            texto:
-                "💻 Crear desde cero un sistema para organizar un negocio",
+                afinidad: {
+                    organizacion: 5,
+                    oficina: 4,
+                    documentacion: 2
+                }
+            },
 
-            afinidad: {
-                programacion: 5,
-                tecnologia: 4,
-                logica: 3,
-                creatividad: 2
+            {
+                texto: "🧾 Revisar cuentas, pagos y números",
+
+                afinidad: {
+                    numeros: 5,
+                    finanzas: 4,
+                    detalle: 3
+                }
+            },
+
+            {
+                texto: "👥 Coordinar personas y actividades",
+
+                afinidad: {
+                    rrhh: 4,
+                    liderazgo: 4,
+                    organizacion: 3
+                }
+            },
+
+            {
+                texto: "📦 Revisar documentos relacionados con mercancías",
+
+                afinidad: {
+                    aduanas: 5,
+                    documentacion: 4,
+                    detalle: 3
+                }
             }
-        },
 
-        {
-            texto:
-                "🔧 Recibir una máquina dañada y lograr que vuelva a funcionar",
+        ]
+    },
 
-            afinidad: {
-                diagnostico: 5,
-                herramientas: 4,
-                mecanica: 3,
-                electricidad: 2
+
+    // =================================================
+    // 12 - GESTIÓN ADUANERA
+    // =================================================
+
+    {
+        tipo: "preferencia",
+
+        icono: "📦",
+
+        pregunta:
+            "Llega una mercancía acompañada de varios documentos. ¿Qué parte te interesaría más?",
+
+        descripcion:
+            "No necesitas conocer aduanas todavía.",
+
+        opciones: [
+
+            {
+                texto: "📑 Revisar que todos los documentos estén en orden",
+
+                afinidad: {
+                    aduanas: 5,
+                    documentacion: 5,
+                    detalle: 3
+                }
+            },
+
+            {
+                texto: "🔢 Revisar valores y cantidades",
+
+                afinidad: {
+                    numeros: 4,
+                    finanzas: 3,
+                    detalle: 3
+                }
+            },
+
+            {
+                texto: "🤝 Comunicarme con las personas involucradas",
+
+                afinidad: {
+                    comunicacion: 4,
+                    cliente: 3,
+                    aduanas: 2
+                }
+            },
+
+            {
+                texto: "🗂️ Organizar todo el proceso",
+
+                afinidad: {
+                    organizacion: 5,
+                    documentacion: 3,
+                    oficina: 2
+                }
             }
-        }
 
-    ]
+        ]
+    },
 
-},
 
-{
-    tipo: "reto",
+    // =================================================
+    // 13 - PROGRAMACIÓN / LÓGICA
+    // =================================================
 
-    formato: "vf",
+    {
+        tipo: "reto",
 
-    icono: "⚡",
+        icono: "🧠",
 
-    pregunta:
-        "Si un producto cuesta C$1,000 y aumenta 10%, su nuevo precio será C$1,100.",
+        pregunta:
+            "Observa la secuencia: 3, 6, 12, 24... ¿qué número sigue?",
 
-    descripcion:
-        "VERDADERO O FALSO • Tienes 20 segundos",
+        descripcion:
+            "🧠 RETO DE LÓGICA • Tienes 20 segundos",
 
-    opciones: [
+        opciones: [
 
-        {
-            texto:
-                "✅ VERDADERO",
+            {
+                texto: "48",
 
-            correcta: true,
+                correcta: true,
 
-            afinidad: {
-                numeros: 3,
-                finanzas: 2
+                afinidad: {
+                    logica: 3,
+                    programacion: 3,
+                    tecnologia: 1
+                }
+            },
+
+            {
+                texto: "36",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "42",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "50",
+                correcta: false,
+                afinidad: {}
             }
-        },
 
-        {
-            texto:
-                "❌ FALSO",
-
-            correcta: false,
-
-            afinidad: {}
-        }
-
-    ]
-
-},
-
-{
-    tipo: "ordenar",
-
-    icono: "🧩",
-
-    pregunta:
-        "Una computadora no tiene conexión a internet. ¿En qué orden investigarías el problema?",
-
-    descripcion:
-        "Toca los pasos desde el primero hasta el último.",
-
-    opciones: [
-
-        {
-            id: "conexion",
-
-            nombreCorto:
-                "Conexión",
-
-            texto:
-                "🔌 Revisar si los cables o Wi-Fi están conectados"
-        },
-
-        {
-            id: "configuracion",
-
-            nombreCorto:
-                "Configuración",
-
-            texto:
-                "⚙️ Revisar la configuración de red"
-        },
-
-        {
-            id: "prueba",
-
-            nombreCorto:
-                "Prueba",
-
-            texto:
-                "🌐 Probar nuevamente la conexión"
-        },
-
-        {
-            id: "diagnostico",
-
-            nombreCorto:
-                "Diagnóstico",
-
-            texto:
-                "🔍 Investigar una falla más profunda"
-        }
-
-    ],
-
-    ordenCorrecto: [
-
-        "conexion",
-        "configuracion",
-        "prueba",
-        "diagnostico"
-
-    ],
-
-    afinidadCorrecta: {
-
-        tecnologia: 3,
-
-        soporte: 4,
-
-        redes: 4,
-
-        logica: 2,
-
-        diagnostico: 2
-
+        ]
     }
-
-}
 
 ];
 
 
+// =====================================================
+// RUTA TÉCNICO GENERAL
+// =====================================================
+
+const preguntasTG = [
+
+    // 14
+
+    {
+        tipo: "preferencia",
+
+        icono: "🔧",
+
+        pregunta:
+            "Si entraras a un taller ahora mismo, ¿qué te gustaría aprender primero?",
+
+        descripcion:
+            "🎯 Revienta tu elección.",
+
+        opciones: [
+
+            {
+                texto: "🚗 Revisar el funcionamiento de un vehículo",
+
+                afinidad: {
+                    mecanica: 5,
+                    diagnostico: 3,
+                    herramientas: 2
+                }
+            },
+
+            {
+                texto: "⚡ Entender una instalación eléctrica",
+
+                afinidad: {
+                    electricidad: 5,
+                    herramientas: 2,
+                    diagnostico: 2
+                }
+            },
+
+            {
+                texto: "❄️ Revisar sistemas de refrigeración",
+
+                afinidad: {
+                    refrigeracion: 5,
+                    diagnostico: 3,
+                    herramientas: 2
+                }
+            },
+
+            {
+                texto: "🖥️ Revisar y dar soporte a una computadora",
+
+                afinidad: {
+                    soporte: 5,
+                    tecnologia: 3,
+                    redes: 2
+                }
+            }
+
+        ]
+    },
+
+
+    // 15
+
+    {
+        tipo: "preferencia",
+
+        formato: "visual",
+
+        icono: "🛠️",
+
+        pregunta:
+            "¿Cuál de estos trabajos te daría más orgullo terminar?",
+
+        descripcion:
+            "Imagina que tú lo realizaste.",
+
+        opciones: [
+
+            {
+                texto: "🪑\nUn mueble\nbien acabado",
+
+                afinidad: {
+                    madera: 5,
+                    precision: 3,
+                    creatividad: 2
+                }
+            },
+
+            {
+                texto: "🔥\nUna estructura\nde metal",
+
+                afinidad: {
+                    metal: 5,
+                    precision: 3,
+                    herramientas: 2
+                }
+            },
+
+            {
+                texto: "🍽️\nUn plato\nbien presentado",
+
+                afinidad: {
+                    gastronomia: 5,
+                    creatividad: 3,
+                    precision: 2
+                }
+            },
+
+            {
+                texto: "🎂\nUn pastel\ndecorado",
+
+                afinidad: {
+                    reposteria: 5,
+                    creatividad: 3,
+                    precision: 2
+                }
+            }
+
+        ]
+    },
+
+
+    // 16
+
+    {
+        tipo: "reto",
+
+        icono: "⚡",
+
+        pregunta:
+            "Antes de revisar un equipo eléctrico, ¿qué es lo más importante?",
+
+        descripcion:
+            "⚡ RETO DE SEGURIDAD",
+
+        opciones: [
+
+            {
+                texto: "🔌 Asegurarse de trabajar de forma segura y sin energía",
+
+                correcta: true,
+
+                afinidad: {
+                    electricidad: 3,
+                    precision: 2,
+                    detalle: 1
+                }
+            },
+
+            {
+                texto: "⚡ Tocar inmediatamente los cables",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "🔧 Cambiar piezas sin revisar",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "🎲 Probar cosas al azar",
+                correcta: false,
+                afinidad: {}
+            }
+
+        ]
+    },
+
+
+    // 17
+
+    {
+        tipo: "preferencia",
+
+        icono: "🌟",
+
+        pregunta:
+            "¿Qué día de trabajo suena más interesante para ti?",
+
+        descripcion:
+            "Última exploración antes de cerrar.",
+
+        opciones: [
+
+            {
+                texto: "🚘 Diagnosticar y reparar vehículos",
+
+                afinidad: {
+                    mecanica: 5,
+                    herramientas: 3,
+                    diagnostico: 3
+                }
+            },
+
+            {
+                texto: "🔌 Reparar equipos electrónicos",
+
+                afinidad: {
+                    electronica: 5,
+                    tecnologia: 3,
+                    diagnostico: 2
+                }
+            },
+
+            {
+                texto: "☕ Atender personas en restaurante o cafetería",
+
+                afinidad: {
+                    servicio: 5,
+                    cliente: 4,
+                    comunicacion: 2
+                }
+            },
+
+            {
+                texto: "💻 Resolver problemas de computadoras y redes",
+
+                afinidad: {
+                    soporte: 5,
+                    redes: 4,
+                    tecnologia: 3
+                }
+            }
+
+        ]
+    }
+
+];
+
+// =====================================================
+// RUTA TÉCNICO ESPECIALISTA
+// =====================================================
+
+const preguntasTE = [
+
+    // 14
+
+    {
+        tipo: "preferencia",
+
+        icono: "🚀",
+
+        pregunta:
+            "¿Cuál proyecto especializado te atrae más?",
+
+        descripcion:
+            "🎯 Escoge sin pensar en cuál sabes hacer.",
+
+        opciones: [
+
+            {
+                texto: "💻 Crear una aplicación o sistema",
+
+                afinidad: {
+                    programacion: 5,
+                    tecnologia: 4,
+                    logica: 3
+                }
+            },
+
+            {
+                texto: "📣 Crear una campaña publicitaria",
+
+                afinidad: {
+                    marketing: 5,
+                    creatividad: 4,
+                    comunicacion: 2
+                }
+            },
+
+            {
+                texto: "🏦 Analizar información financiera",
+
+                afinidad: {
+                    finanzas: 5,
+                    numeros: 4,
+                    detalle: 2
+                }
+            },
+
+            {
+                texto: "🌎 Comunicarme fluidamente en inglés",
+
+                afinidad: {
+                    idiomas: 5,
+                    comunicacion: 4,
+                    cliente: 1
+                }
+            }
+
+        ]
+    },
+
+
+    // 15
+
+    {
+        tipo: "reto",
+
+        icono: "💻",
+
+        pregunta:
+            "Si x vale 5 y después hacemos x = x + 3, ¿cuánto vale x?",
+
+        descripcion:
+            "💻 MINI RETO DE PROGRAMACIÓN",
+
+        opciones: [
+
+            {
+                texto: "8",
+
+                correcta: true,
+
+                afinidad: {
+                    programacion: 3,
+                    logica: 3,
+                    tecnologia: 1
+                }
+            },
+
+            {
+                texto: "3",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "5",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "15",
+                correcta: false,
+                afinidad: {}
+            }
+
+        ]
+    },
+
+
+    // 16
+
+    {
+        tipo: "preferencia",
+
+        icono: "📣",
+
+        pregunta:
+            "Una empresa lanzará un nuevo producto. ¿Qué te gustaría hacer?",
+
+        descripcion:
+            "🎯 Elige tu papel en el proyecto.",
+
+        opciones: [
+
+            {
+                texto: "🎨 Diseñar cómo se verá la publicidad",
+
+                afinidad: {
+                    marketing: 5,
+                    creatividad: 4
+                }
+            },
+
+            {
+                texto: "📊 Analizar precios, costos y resultados",
+
+                afinidad: {
+                    finanzas: 5,
+                    numeros: 4,
+                    detalle: 2
+                }
+            },
+
+            {
+                texto: "💻 Crear la plataforma digital",
+
+                afinidad: {
+                    programacion: 5,
+                    tecnologia: 4
+                }
+            },
+
+            {
+                texto: "🌎 Presentarlo a personas que hablan inglés",
+
+                afinidad: {
+                    idiomas: 5,
+                    comunicacion: 4,
+                    cliente: 2
+                }
+            }
+
+        ]
+    },
+
+
+    // 17
+
+    {
+        tipo: "preferencia",
+
+        formato: "duelo",
+
+        icono: "⚔️",
+
+        pregunta:
+            "¿Qué tipo de reto te atrae más?",
+
+        descripcion:
+            "⚔️ DUELO ESPECIALISTA",
+
+        opciones: [
+
+            {
+                texto:
+                    "🧠 Resolver problemas usando lógica, datos y tecnología",
+
+                afinidad: {
+                    programacion: 4,
+                    logica: 4,
+                    finanzas: 2,
+                    tecnologia: 2
+                }
+            },
+
+            {
+                texto:
+                    "🎤 Comunicar ideas, persuadir y conectar con personas",
+
+                afinidad: {
+                    marketing: 4,
+                    idiomas: 3,
+                    comunicacion: 5,
+                    ventas: 2
+                }
+            }
+
+        ]
+    }
+
+];
+
+// =====================================================
+// RUTA BACHILLERATO TÉCNICO
+// =====================================================
+
+const preguntasBT = [
+
+    // 14
+
+    {
+        tipo: "preferencia",
+
+        icono: "🎓",
+
+        pregunta:
+            "En una empresa, ¿qué responsabilidad te atrae más?",
+
+        descripcion:
+            "🎯 Revienta la opción que más vaya contigo.",
+
+        opciones: [
+
+            {
+                texto: "📋 Planificar tareas y organizar procesos",
+
+                afinidad: {
+                    organizacion: 5,
+                    oficina: 4,
+                    liderazgo: 2
+                }
+            },
+
+            {
+                texto: "🧾 Trabajar con cuentas y registros",
+
+                afinidad: {
+                    numeros: 5,
+                    finanzas: 5,
+                    detalle: 3
+                }
+            },
+
+            {
+                texto: "👥 Coordinar un equipo de trabajo",
+
+                afinidad: {
+                    liderazgo: 4,
+                    rrhh: 3,
+                    organizacion: 3
+                }
+            },
+
+            {
+                texto: "📑 Mantener documentos bien organizados",
+
+                afinidad: {
+                    documentacion: 5,
+                    oficina: 4,
+                    detalle: 3
+                }
+            }
+
+        ]
+    },
+
+
+    // 15
+
+    {
+        tipo: "reto",
+
+        icono: "🧮",
+
+        pregunta:
+            "Un negocio recibió C$900 y gastó C$600. ¿Cuánto quedó?",
+
+        descripcion:
+            "🧮 RETO CONTABLE",
+
+        opciones: [
+
+            {
+                texto: "C$300",
+
+                correcta: true,
+
+                afinidad: {
+                    numeros: 3,
+                    finanzas: 3,
+                    detalle: 1
+                }
+            },
+
+            {
+                texto: "C$200",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "C$400",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "C$1,500",
+                correcta: false,
+                afinidad: {}
+            }
+
+        ]
+    },
+
+
+    // 16
+
+    {
+        tipo: "preferencia",
+
+        icono: "📆",
+
+        pregunta:
+            "Tienes varias tareas pendientes. ¿Cuál te gustaría asumir?",
+
+        descripcion:
+            "Escoge la que más te interese aprender.",
+
+        opciones: [
+
+            {
+                texto: "📅 Preparar la agenda y organizar una reunión",
+
+                afinidad: {
+                    oficina: 5,
+                    organizacion: 5,
+                    documentacion: 2
+                }
+            },
+
+            {
+                texto: "💵 Revisar movimientos y comprobantes",
+
+                afinidad: {
+                    finanzas: 5,
+                    numeros: 4,
+                    detalle: 4
+                }
+            },
+
+            {
+                texto: "👥 Distribuir responsabilidades del equipo",
+
+                afinidad: {
+                    liderazgo: 4,
+                    organizacion: 4,
+                    rrhh: 2
+                }
+            },
+
+            {
+                texto: "📂 Ordenar y clasificar información",
+
+                afinidad: {
+                    documentacion: 5,
+                    detalle: 4,
+                    oficina: 3
+                }
+            }
+
+        ]
+    },
+
+
+    // 17
+
+    {
+        tipo: "preferencia",
+
+        formato: "duelo",
+
+        icono: "⚔️",
+
+        pregunta:
+            "¿Qué te resulta más atractivo?",
+
+        descripcion:
+            "⚔️ DUELO DE GESTIÓN",
+
+        opciones: [
+
+            {
+                texto:
+                    "📋 Organizar personas, actividades y recursos",
+
+                afinidad: {
+                    organizacion: 5,
+                    liderazgo: 3,
+                    oficina: 3
+                }
+            },
+
+            {
+                texto:
+                    "🧾 Trabajar con números, cuentas y detalles",
+
+                afinidad: {
+                    numeros: 5,
+                    finanzas: 5,
+                    detalle: 4
+                }
+            }
+
+        ]
+    }
+
+];
+
+// =====================================================
+// RUTA MIXTA
+// =====================================================
+
+const preguntasMixto = [
+
+    // 14
+
+    {
+        tipo: "preferencia",
+
+        icono: "🌈",
+
+        pregunta:
+            "Si te regalaran un día para probar una profesión, ¿qué harías?",
+
+        descripcion:
+            "No hay una respuesta mejor que otra.",
+
+        opciones: [
+
+            {
+                texto: "💻 Crear algo con tecnología",
+
+                afinidad: {
+                    tecnologia: 4,
+                    programacion: 3,
+                    soporte: 2
+                }
+            },
+
+            {
+                texto: "🔧 Trabajar en un taller",
+
+                afinidad: {
+                    herramientas: 4,
+                    mecanica: 3,
+                    diagnostico: 2
+                }
+            },
+
+            {
+                texto: "🍰 Crear algo en cocina o pastelería",
+
+                afinidad: {
+                    gastronomia: 4,
+                    reposteria: 4,
+                    creatividad: 2
+                }
+            },
+
+            {
+                texto: "📊 Participar en un proyecto empresarial",
+
+                afinidad: {
+                    organizacion: 4,
+                    finanzas: 2,
+                    marketing: 2,
+                    oficina: 2
+                }
+            }
+
+        ]
+    },
+
+
+    // 15
+
+    {
+        tipo: "preferencia",
+
+        formato: "visual",
+
+        icono: "👀",
+
+        pregunta:
+            "¿Cuál espacio te produce más curiosidad?",
+
+        descripcion:
+            "Más adelante pondremos aquí las fotos reales del centro.",
+
+        opciones: [
+
+            {
+                texto: "⚡\nTaller de\nelectricidad",
+
+                afinidad: {
+                    electricidad: 5,
+                    herramientas: 2
+                }
+            },
+
+            {
+                texto: "🪵\nTaller de\nmadera",
+
+                afinidad: {
+                    madera: 5,
+                    creatividad: 2
+                }
+            },
+
+            {
+                texto: "☕\nRestaurante y\ncafetería",
+
+                afinidad: {
+                    servicio: 5,
+                    cliente: 3
+                }
+            },
+
+            {
+                texto: "📣\nÁrea de\nmarketing",
+
+                afinidad: {
+                    marketing: 5,
+                    creatividad: 3
+                }
+            }
+
+        ]
+    },
+
+
+    // 16
+
+    {
+        tipo: "reto",
+
+        icono: "👨‍🍳",
+
+        pregunta:
+            "Una receta usa 4 huevos para 8 personas. Para 24 personas, ¿cuántos huevos necesitas?",
+
+        descripcion:
+            "👨‍🍳 RETO DE COCINA",
+
+        opciones: [
+
+            {
+                texto: "12",
+
+                correcta: true,
+
+                afinidad: {
+                    gastronomia: 2,
+                    reposteria: 2,
+                    numeros: 2,
+                    precision: 1
+                }
+            },
+
+            {
+                texto: "8",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "16",
+                correcta: false,
+                afinidad: {}
+            },
+
+            {
+                texto: "20",
+                correcta: false,
+                afinidad: {}
+            }
+
+        ]
+    },
+
+
+    // 17
+
+    {
+        tipo: "preferencia",
+
+        formato: "duelo",
+
+        icono: "⚔️",
+
+        pregunta:
+            "¿Qué tipo de satisfacción te atrae más?",
+
+        descripcion:
+            "⚔️ DUELO FINAL DE EXPLORACIÓN",
+
+        opciones: [
+
+            {
+                texto:
+                    "🔧 Ver algo físico funcionando gracias a mi trabajo",
+
+                afinidad: {
+                    herramientas: 4,
+                    mecanica: 2,
+                    electricidad: 2,
+                    diagnostico: 2
+                }
+            },
+
+            {
+                texto:
+                    "💡 Ver una idea o proyecto crecer gracias a mí",
+
+                afinidad: {
+                    creatividad: 4,
+                    marketing: 2,
+                    programacion: 2,
+                    organizacion: 2
+                }
+            }
+
+        ]
+    }
+
+];
+
+// =====================================================
+// CIERRE COMÚN
+// =====================================================
+
+const preguntasCierre = [
+
+    {
+        tipo: "preferencia",
+
+        icono: "🏁",
+
+        pregunta:
+            "Pensando en todo lo que acabas de explorar, ¿qué sensación buscas más en tu futuro?",
+
+        descripcion:
+            "🎯 ÚLTIMA MISIÓN • Sigue tu instinto.",
+
+        opciones: [
+
+            {
+                texto: "🧠 Descubrir problemas y encontrar soluciones",
+
+                afinidad: {
+                    diagnostico: 4,
+                    logica: 3,
+                    tecnologia: 1,
+                    detalle: 1
+                }
+            },
+
+            {
+                texto: "🎨 Crear cosas que otras personas puedan ver y disfrutar",
+
+                afinidad: {
+                    creatividad: 5,
+                    reposteria: 1,
+                    marketing: 1,
+                    madera: 1
+                }
+            },
+
+            {
+                texto: "🤝 Trabajar con personas y ayudarlas",
+
+                afinidad: {
+                    comunicacion: 5,
+                    cliente: 3,
+                    servicio: 2,
+                    rrhh: 2
+                }
+            },
+
+            {
+                texto: "📋 Organizar información, números y proyectos",
+
+                afinidad: {
+                    organizacion: 5,
+                    detalle: 3,
+                    numeros: 2,
+                    oficina: 2
+                }
+            }
+
+        ]
+    }
+
+];
 // =====================================================
 // PORTADA
 // =====================================================
@@ -1911,8 +2552,13 @@ function iniciarJuego() {
 
     respuestasUsuario = [];
 
-    actualizarHUD();
+    rutaElegida = "";
 
+    preguntasActivas = [
+        crearPreguntaRuta()
+    ];
+
+    actualizarHUD();
 
     pantallaDatos.classList.add(
         "oculto"
@@ -1926,17 +2572,14 @@ function iniciarJuego() {
         "oculto"
     );
 
-
     textoNivel.textContent =
         nivelEstudiante === "bachiller"
             ? "Bachiller"
             : "Noveno aprobado";
 
-
     mostrarPregunta();
 
 }
-
 
 // =====================================================
 // MOSTRAR PREGUNTA
@@ -1973,19 +2616,20 @@ else {
 
 
     const pregunta =
-        preguntas[preguntaActual];
+    preguntasActivas[preguntaActual];
 
 
     const numero =
         preguntaActual + 1;
 
+    const totalMisiones = 18;
 
-    numeroPregunta.textContent =
-        "Misión " +
-        numero +
-        " de " +
-        preguntas.length;
 
+numeroPregunta.textContent =
+    "Misión " +
+    (preguntaActual + 1) +
+    " de " +
+    totalMisiones;
 
     numeroFondo.textContent =
         String(numero).padStart(
@@ -1994,13 +2638,10 @@ else {
         );
 
 
-    const progreso =
-        (
-            numero
-            /
-            preguntas.length
-        )
-        * 100;
+   const progreso =
+    ((preguntaActual + 1)
+    / 18)
+    * 100;
 
 
     barraProgreso.style.width =
@@ -2091,6 +2732,33 @@ else {
         "oculto"
     );
 
+  // =============================================
+// FORMATO BURBUJAS
+// =============================================
+
+const usarBurbujas =
+    pregunta.formato === "burbujas"
+    ||
+    (
+        pregunta.tipo === "preferencia"
+        &&
+        pregunta.formato !== "duelo"
+        &&
+        pregunta.formato !== "visual"
+    );
+
+
+if (usarBurbujas) {
+
+    mostrarPreguntaBurbujas(
+        pregunta
+    );
+
+    mostrarRespuestaAnterior();
+
+    return;
+
+}
 
     // =============================================
     // PREGUNTA DE ORDEN
@@ -2178,6 +2846,138 @@ else {
         }
     );
    mostrarRespuestaAnterior();
+}
+
+
+// =====================================================
+// MOSTRAR PREGUNTA EN BURBUJAS
+// =====================================================
+
+function mostrarPreguntaBurbujas(
+    pregunta
+) {
+
+    opcionesQuiz.className =
+        "opciones-quiz formato-burbujas";
+
+
+    const tablero =
+        document.createElement("div");
+
+    tablero.className =
+        "tablero-burbujas";
+
+
+    const posiciones = [
+        "bubble-pos-1",
+        "bubble-pos-2",
+        "bubble-pos-3",
+        "bubble-pos-4"
+    ];
+
+
+    pregunta.opciones.forEach(
+        function (opcion, indice) {
+
+            const boton =
+                document.createElement("button");
+
+
+            boton.className =
+                "opcion-quiz bubble-option " +
+                posiciones[indice];
+
+
+           const textoLimpio =
+    opcion.texto.trim();
+
+
+const partes =
+    textoLimpio.split(/\s+/);
+
+
+const icono =
+    partes.shift();
+
+
+const texto =
+    partes.join(" ")
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+
+
+boton.innerHTML = `
+
+    <span class="bubble-icon">
+        ${icono}
+    </span>
+
+    <span class="bubble-label">
+        ${texto}
+    </span>
+
+`;
+
+
+            boton.addEventListener(
+                "click",
+                function () {
+
+                    if (respondida) {
+
+                        return;
+
+                    }
+
+                    boton.classList.add(
+                        "reventada"
+                    );
+
+                    setTimeout(
+                        function () {
+
+                            responder(
+                                opcion,
+                                boton,
+                                indice
+                            );
+
+                        },
+                        180
+                    );
+
+                }
+            );
+
+
+            tablero.appendChild(
+                boton
+            );
+
+        }
+    );
+
+
+    opcionesQuiz.appendChild(
+        tablero
+    );
+
+
+    const mensaje =
+        document.createElement("p");
+
+    mensaje.className =
+        "mensaje-burbujas";
+
+    mensaje.textContent =
+        "🎯 Toca una burbuja para reventarla";
+
+    opcionesQuiz.appendChild(
+        mensaje
+    );
+
 }
 
 // =====================================================
@@ -2741,7 +3541,7 @@ function responder(
 
 
     const pregunta =
-        preguntas[preguntaActual];
+        preguntasActivas[preguntaActual];
 
 
     const botones =
@@ -2757,7 +3557,18 @@ function responder(
 
         }
     );
+    if (
+        pregunta.esRuta
+        &&
+        opcion.ruta
+    ) {
 
+        rutaElegida =
+            opcion.ruta;
+
+        construirCuestionarioRuta();
+
+    }
 
     let xpGanado = 0;
 
@@ -2934,8 +3745,7 @@ btnSiguiente.addEventListener(
 
 
         if (
-            preguntaActual
-            < preguntas.length
+          preguntaActual < preguntasActivas.length
         ) {
 
             mostrarPregunta();
@@ -3269,8 +4079,8 @@ function mostrarResultados() {
         xp;
 
 
-    misionesFinal.textContent =
-        preguntas.length;
+   misionesFinal.textContent =
+    preguntasActivas.length;
 
 
     const mejores =
@@ -3653,3 +4463,50 @@ btnAnterior.addEventListener(
 
     }
 );
+// =====================================================
+// CONSTRUIR PREGUNTAS SEGÚN RUTA
+// =====================================================
+
+function construirCuestionarioRuta() {
+
+    let bloqueRuta = [];
+
+
+    if (rutaElegida === "tg") {
+
+        bloqueRuta = preguntasTG;
+
+    }
+
+    else if (rutaElegida === "te") {
+
+        bloqueRuta = preguntasTE;
+
+    }
+
+    else if (rutaElegida === "bt") {
+
+        bloqueRuta = preguntasBT;
+
+    }
+
+    else {
+
+        bloqueRuta = preguntasMixto;
+
+    }
+
+
+    preguntasActivas = [
+
+        crearPreguntaRuta(),
+
+        ...preguntasComunes,
+
+        ...bloqueRuta,
+
+        ...preguntasCierre
+
+    ];
+
+}

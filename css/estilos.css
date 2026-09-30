@@ -5095,3 +5095,225 @@ and
     }
 
 }
+/* =====================================================
+   FORMATO BURBUJAS / TIRO AL BLANCO
+===================================================== */
+
+.opciones-quiz.formato-burbujas {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.tablero-burbujas {
+    position: relative;
+    width: 100%;
+    min-height: 360px;
+    border-radius: 30px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top, rgba(90, 220, 255, 0.18), transparent 35%),
+        radial-gradient(circle at bottom, rgba(255, 221, 90, 0.15), transparent 35%),
+        linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: inset 0 0 30px rgba(255,255,255,.04);
+}
+
+.bubble-option {
+    position: absolute;
+    width: 145px;
+    height: 145px;
+    border: none;
+    border-radius: 50%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.35), rgba(255,255,255,.08) 40%, rgba(60,180,255,.20));
+    border: 2px solid rgba(255,255,255,.18);
+    box-shadow:
+        0 14px 35px rgba(0,0,0,.18),
+        inset 0 0 18px rgba(255,255,255,.10);
+    transition: transform .2s ease, opacity .2s ease;
+    animation: flotarBubble 3.2s infinite ease-in-out alternate;
+    backdrop-filter: blur(10px);
+}
+
+.bubble-option:hover {
+    transform: scale(1.06);
+}
+
+.bubble-option:nth-child(2) {
+    animation-duration: 3.8s;
+}
+
+.bubble-option:nth-child(3) {
+    animation-duration: 2.9s;
+}
+
+.bubble-option:nth-child(4) {
+    animation-duration: 4.1s;
+}
+
+@keyframes flotarBubble {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-12px);
+    }
+}
+
+.bubble-icon {
+    font-size: 30px;
+    line-height: 1;
+}
+
+.bubble-label {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.2;
+    max-width: 100px;
+}
+
+.bubble-option.reventada {
+    animation: reventarBubble .22s ease forwards;
+}
+
+@keyframes reventarBubble {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.18);
+        opacity: .95;
+    }
+    100% {
+        transform: scale(.35);
+        opacity: 0;
+    }
+}
+
+/* tablero con objetivo suave */
+.tablero-burbujas::before,
+.tablero-burbujas::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed rgba(255,255,255,.08);
+    pointer-events: none;
+}
+
+.tablero-burbujas::before {
+    width: 180px;
+    height: 180px;
+    top: 20px;
+    left: 20px;
+}
+
+.tablero-burbujas::after {
+    width: 220px;
+    height: 220px;
+    right: 20px;
+    bottom: 20px;
+}
+
+.mensaje-burbujas {
+    margin-top: 10px;
+    text-align: center;
+    color: rgba(255,255,255,.58);
+    font-size: 12px;
+    letter-spacing: .4px;
+}
+
+/* posiciones por defecto */
+.bubble-pos-1 {
+    left: 5%;
+    top: 48%;
+}
+
+.bubble-pos-2 {
+    left: 28%;
+    top: 12%;
+}
+
+.bubble-pos-3 {
+    left: 52%;
+    top: 48%;
+}
+
+.bubble-pos-4 {
+    left: 74%;
+    top: 14%;
+}
+
+/* CELULAR */
+@media (max-width: 650px) {
+
+    .tablero-burbujas {
+        min-height: 430px;
+        border-radius: 24px;
+    }
+
+    .bubble-option {
+        width: 120px;
+        height: 120px;
+        padding: 10px;
+    }
+
+    .bubble-icon {
+        font-size: 25px;
+    }
+
+    .bubble-label {
+        font-size: 11px;
+        max-width: 82px;
+    }
+
+    .bubble-pos-1 {
+        left: 6%;
+        top: 52%;
+    }
+
+    .bubble-pos-2 {
+        left: 18%;
+        top: 9%;
+    }
+
+    .bubble-pos-3 {
+        left: 56%;
+        top: 55%;
+    }
+
+    .bubble-pos-4 {
+        left: 58%;
+        top: 10%;
+    }
+
+}
+
+@media (max-width: 380px) {
+
+    .tablero-burbujas {
+        min-height: 410px;
+    }
+
+    .bubble-option {
+        width: 105px;
+        height: 105px;
+    }
+
+    .bubble-label {
+        font-size: 10px;
+        max-width: 72px;
+    }
+
+}
